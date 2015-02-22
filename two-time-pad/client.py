@@ -32,7 +32,7 @@ class Server:
             return result
          except urllib.error.HTTPError as e:
              raise ServerError(e.code, e.read().decode()) from None
-             
+
 def xor(a, b):
   c = bytearray()
   for x,y in zip(a,b):
@@ -42,23 +42,47 @@ def xor(a, b):
 if __name__ == "__main__":
   server = Server(BASE_URL)
   seed = '1234'
-  
+
   response = server.query('two-time-pad/question/sommerard/' + seed)
   print(response)
 
   response = server.query('two-time-pad/challenge/sommerard/' + seed)
-  
+
   A = response['A']
   B = response['B']
-  
-  A_byte = b16decode(A.encode('ascii'))
-  B_byte = b16decode(B.encode('ascii'))
-  
+
+  A_byte = b16decode(A, casefold=True)
+  B_byte = b16decode(B, casefold=True)
+
   A_byte_xor_B_byte = xor(A_byte, B_byte)
 
   C = ""
+  text = ""
   for i in A_byte_xor_B_byte:
-    print(i)
-    C += xor("{0:08x}".format(i).encode('ascii'),"{0:08x}".format(49).encode('ascii')).decode()
-    
-  print(C)
+    C = chr(i ^ ord('0'))
+    if((C.isalpha() == False) and (C != "\n") and (C != " ")):
+      C = chr(i ^ ord('1'))
+    text += str(C)
+
+  print(text)
+
+  word2send = ""
+  cpt_line = 1
+  cpt_word = 1
+  for i in text:
+    if(i == '\n'):
+      cpt_line += 1
+      cpt_word = 1
+    if(i == ' '):
+      cpt_word += 1
+    if((cpt_line == 4) and (cpt_word == 3)):
+      break
+    if((cpt_line == 4) and (cpt_word == 2)):
+      if(i != ' '):
+        word2send += i
+
+  print("Word: ", word2send)
+
+  parameters = { 'word': word2send }
+  response = server.query('two-time-pad/answer/sommerard/' + seed, parameters)
+  print(response)
