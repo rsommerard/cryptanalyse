@@ -51,8 +51,8 @@ if __name__ == "__main__":
   A = response['A']
   B = response['B']
 
-  A_byte = b16decode(A, casefold=True)
-  B_byte = b16decode(B, casefold=True)
+  A_byte = b16decode(A)
+  B_byte = b16decode(B)
 
   A_byte_xor_B_byte = xor(A_byte, B_byte)
 
@@ -67,18 +67,18 @@ if __name__ == "__main__":
   print(text)
 
   word2send = ""
-  cpt_line = 1
-  cpt_word = 1
+  cpt_line = 0
+  cpt_word = 0
   for i in text:
-    if(i == '\n'):
+    if(i == "\n"):
       cpt_line += 1
-      cpt_word = 1
-    if(i == ' '):
+      cpt_word = 0
+    if(i == " "):
       cpt_word += 1
     if((cpt_line == 4) and (cpt_word == 3)):
       break
     if((cpt_line == 4) and (cpt_word == 2)):
-      if(i != ' '):
+      if(i != " "):
         word2send += i
 
   print("Word: ", word2send)
