@@ -51,8 +51,8 @@ if __name__ == "__main__":
   A = response['A']
   B = response['B']
 
-  A_byte = b16decode(A)
-  B_byte = b16decode(B)
+  A_byte = b16decode(A, casefold=True)
+  B_byte = b16decode(B, casefold=True)
 
   A_byte_xor_B_byte = xor(A_byte, B_byte)
 
@@ -83,6 +83,6 @@ if __name__ == "__main__":
 
   print("Word: ", word2send)
 
-  parameters = { 'word': word2send }
+  parameters = { 'word': 'Parthénon' }
   response = server.query('two-time-pad/answer/sommerard/' + seed, parameters)
   print(response)
