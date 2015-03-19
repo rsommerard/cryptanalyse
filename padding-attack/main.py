@@ -1,6 +1,7 @@
 import client
 import helpers
 import random
+import base64
 
 SEED = '14'
 
@@ -85,7 +86,7 @@ if __name__ == '__main__':
 
     ciphertext_dec = ''
 
-    nb_block = 13
+    nb_block = 14
     for i in range(-1, -(len(blocks) + 1), -1):
         if(i == (-(len(blocks) + 1) + 1)):
             block = find_block(iv, blocks[i])
@@ -115,8 +116,27 @@ if __name__ == '__main__':
     # SEED 14 block 1 = 0A0A427261766F2C2074752061732072
     # SEED 14 block 0 = 53616C757420736F6D6D65726172642C
 
-    print('Final ciphertext_dec: ' + ciphertext_dec)
 
-    parameters = { 'plaintext': ciphertext_dec }
+    #ciphertext_dec = '6265376630623563' + ciphertext_dec #0808080808080808' + ciphertext_dec
+    #ciphertext_dec = '63313637303433306466613364623663' + ciphertext_dec
+    #ciphertext_dec = '6F6F0A6D61633A203435373237356333' + ciphertext_dec
+    #ciphertext_dec = '756E6B3A20666F6F6F6F6F6F6F6F6F6F' + ciphertext_dec
+    #ciphertext_dec = '0A70736575646F2D72616E646F6D206A' + ciphertext_dec
+    #ciphertext_dec = '7333727633720A0A736565643A203134' + ciphertext_dec
+    #ciphertext_dec = '2D2D2D2D2D2D2D0A5468652050344320' + ciphertext_dec
+    #ciphertext_dec = '206C652070616464696E672E0A2D2D2D' + ciphertext_dec
+    #ciphertext_dec = '6F64652065740A6427656E6C65766572' + ciphertext_dec
+    #ciphertext_dec = '657222206365636920656E20756E6963' + ciphertext_dec
+    #ciphertext_dec = '6520706173206465202264C3A9636F64' + ciphertext_dec
+    #ciphertext_dec = 'C3A9757373692021204E276F75626C69' + ciphertext_dec
+    #ciphertext_dec = '0A0A427261766F2C2074752061732072' + ciphertext_dec
+    #ciphertext_dec = '53616C757420736F6D6D65726172642C' + ciphertext_dec
+
+    message = base64.b16decode(ciphertext_dec)
+
+    print(message.decode())
+    #print('Final ciphertext_dec: ' + message.decode())
+
+    parameters = { 'plaintext': message.decode() }
     response = server.query(STEP_3_VALIDATION, parameters)
     print(response)
